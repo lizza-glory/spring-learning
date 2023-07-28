@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- SSM 整合教程: https://www.cnblogs.com/406070989senlin/p/11154791.html -->
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+
+    <!-- goods -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url"  value="${goods.jdbc.url}" />
+        <property name="username" value="${goods.jdbc.username}" />
+        <property name="password" value="${goods.jdbc.password}" />
+        <property name="maxActive" value="${goods.jdbc.maxActive}" />
+        <property name="maxIdle" value="${goods.jdbc.maxIdle}" />
+        <property name="maxWait" value="${goods.jdbc.maxWait}" />
+        <property name="validationQuery" value="select 1" />
+        <property name="testOnBorrow" value="true" />
+        <property name="testWhileIdle" value="true" />
+    </bean>
+    <bean id="ordersDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url"  value="${orders.jdbc.url}" />
+        <property name="username" value="${orders.jdbc.username}" />
+        <property name="password" value="${orders.jdbc.password}" />
+        <property name="maxActive" value="${orders.jdbc.maxActive}" />
+        <property name="maxIdle" value="${orders.jdbc.maxIdle}" />
+        <property name="maxWait" value="${orders.jdbc.maxWait}" />
+        <property name="validationQuery" value="select 1" />
+        <property name="testOnBorrow" value="true" />
+        <property name="testWhileIdle" value="true" />
+    </bean>
+    <bean id="callcenterDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url"  value="${callcenter.jdbc.url}" />
+        <property name="username" value="${callcenter.jdbc.username}" />
+        <property name="password" value="${callcenter.jdbc.password}" />
+        <property name="maxActive" value="${callcenter.jdbc.maxActive}" />
+        <property name="maxIdle" value="${callcenter.jdbc.maxIdle}" />
+        <property name="maxWait" value="${callcenter.jdbc.maxWait}" />
+        <property name="validationQuery" value="select 1" />
+        <property name="testOnBorrow" value="true" />
+        <property name="testWhileIdle" value="true" />
+    </bean>
+
+    <!-- SqlSessionFactory -->
+    <bean id="sqlSessionFactory" name="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath:/mapper/*Mapper.xml" />
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+    <!-- 扫描Dao接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lizza.dao.goods" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- SqlSessionFactory -->
+    <bean id="ordersSqlSessionFactory" name="ordersSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="ordersDataSource" />
+        <property name="mapperLocations" value="classpath:/mapper/*Mapper.xml" />
+    </bean>
+    <bean id="ordersSqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="ordersSqlSessionFactory"/>
+    </bean>
+    <!-- 扫描Dao接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lizza.dao.orders" />
+        <property name="sqlSessionFactoryBeanName" value="ordersSqlSessionFactory"/>
+    </bean>
+
+    <!-- callcenter -->
+    <bean id="callcenterSqlSessionFactory" name="callcenterSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="callcenterDataSource" />
+        <property name="mapperLocations" value="classpath:/mapper/*Mapper.xml" />
+    </bean>
+    <bean id="callcenterSqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="callcenterSqlSessionFactory"/>
+    </bean>
+    <!-- 扫描Dao接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lizza.dao.callcenter" />
+        <property name="sqlSessionFactoryBeanName" value="callcenterSqlSessionFactory"/>
+    </bean>
+</beans>
