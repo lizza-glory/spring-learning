@@ -9,9 +9,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 /**
- * @Desc:
- * @author: lizza.liu
- * @date: 2021-01-26
+ * 路由
  */
 @Component
 public class RouterConfig {
